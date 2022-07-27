@@ -3,13 +3,14 @@ import sys
 import string
 import curses
 import time
+from words_dictionary import generate_words
 
 
 def main(term):
     # term.keypad(True)
     term.nodelay(True)
 
-    words = 'hemacytometer introducement solder unparochially unconcordant debby tetrapneumonian cerebronic weeder sublateral martinoe archphylarch funkiest currijong sephirah realizer acnodal stonehearted unson crinums nonlinearly obsidians feverlike jaycees revelatory drupal polyopia disestablish londonism discriminative fenster cheerlessness maracan leucodermic brotulid perrukery focalizes quitrent basalt dorm rort beckoningly tyrosinuria crankest pickup undramatical unempaneled pilgarlicky shrift raptureless unalluring neutralizers plagioclimax candlesticks chrysography pleadingness nephrocystosis crisis undeductible huckstress buffware untimid quiff tiddlywink gyrostatic metabiological ureterostenoma demodulate cooed streamliner'
+    words = generate_words()
     entered_words = ''
 
     is_game_going = False
@@ -44,13 +45,13 @@ def main(term):
         term.refresh()
 
     def reset_game():
+        nonlocal words
         nonlocal is_game_going
         nonlocal entered_words
 
         is_game_going = False
         entered_words = ''
-        # add new words and shuffle
-        # display results
+        words = generate_words()
 
     def calculate_speed():
         return ((len(entered_words) / 5) / 1) - (count_errors() / 1)  # net wpm
