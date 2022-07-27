@@ -28,19 +28,23 @@ def main(term):
         # term.clear()
         term.erase()
 
-        term.addstr(10, 0, '%0.1f' % (time.time() - start_time))
-        term.addstr(11, 0, f'speed: {speed}')
-        term.addstr(12, 0, f'errors: {count_errors()}')
-        term.move(0, 0)
+        if not is_game_going:
+            term.addstr('press \'enter\' to start a game')
+            if speed > 0:
+                term.addstr(5, 0, f'speed: {speed}')
+        else:
+            term.addstr(5, 0, '%0.1f' % (time.time() - start_time))
+            term.addstr(6, 0, f'errors: {count_errors()}')
+            term.move(0, 0)
 
-        term.addstr(words)
+            term.addstr(words)
 
-        term.move(0, 0)
-        for index in range(len(entered_words)):
-            if entered_words[index] != words[index]:
-                term.addstr(words[index], curses.color_pair(2))
-            else:
-                term.addstr(words[index], curses.color_pair(3))
+            term.move(0, 0)
+            for index in range(len(entered_words)):
+                if entered_words[index] != words[index]:
+                    term.addstr(words[index], curses.color_pair(2) | curses.A_BOLD)
+                else:
+                    term.addstr(words[index], curses.color_pair(3) | curses.A_BOLD)
 
         term.refresh()
 
@@ -65,7 +69,7 @@ def main(term):
 
     while True:
         if is_game_going and time.time() - start_time >= 60:
-            speed = int(calculate_speed())
+            speed = calculate_speed()
             reset_game()
 
         try:
@@ -73,7 +77,7 @@ def main(term):
             event = term.getch()  # get the number of the pressed key
             if event == curses.ERR:  # -1 no input
                 pass
-            elif event == ord('x'):  # terminate app
+            elif event == ord('X'):  # terminate app
                 break
             elif event == 127:  # backspace
                 entered_words = entered_words[:-1]
