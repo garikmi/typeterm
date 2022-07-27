@@ -17,18 +17,19 @@ def main(term):
 
     speed = 0
 
-    # error_count = 0
+    curses.init_pair(1, 15, 16)  # background color
+    curses.init_pair(2, 9, 16)  # error color
+    curses.init_pair(3, 12, 16)  # typing color
 
-    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    term.bkgd(' ', curses.color_pair(1))
 
     def refresh_ui():
-        term.clear()
+        # term.clear()
+        term.erase()
 
         term.addstr(10, 0, '%0.1f' % (time.time() - start_time))
         term.addstr(11, 0, f'speed: {speed}')
         term.addstr(12, 0, f'errors: {count_errors()}')
-        # term.addstr(12, 0, f'errors: {error_count}')
         term.move(0, 0)
 
         term.addstr(words)
@@ -36,14 +37,13 @@ def main(term):
         term.move(0, 0)
         for index in range(len(entered_words)):
             if entered_words[index] != words[index]:
-                term.addstr(words[index], curses.color_pair(1))
-            else:
                 term.addstr(words[index], curses.color_pair(2))
+            else:
+                term.addstr(words[index], curses.color_pair(3))
 
         term.refresh()
 
     def reset_game():
-        nonlocal words
         nonlocal is_game_going
         nonlocal entered_words
 
@@ -53,9 +53,7 @@ def main(term):
         # display results
 
     def calculate_speed():
-        # return (len(entered_words) / 5) / 1  # gross wpm
-        # return ((len(entered_words) / 5) / 0.5) - (error_count / 0.5)  # net wpm
-        return ((len(entered_words) / 5) / 0.5) - (count_errors() / 0.5)  # net wpm
+        return ((len(entered_words) / 5) / 1) - (count_errors() / 1)  # net wpm
 
     def count_errors():
         error_count = 0
@@ -65,11 +63,12 @@ def main(term):
         return error_count
 
     while True:
-        if is_game_going and time.time() - start_time >= 30:
+        if is_game_going and time.time() - start_time >= 60:
             speed = int(calculate_speed())
             reset_game()
 
         try:
+            # disable command k to prevent screen clearing
             event = term.getch()  # get the number of the pressed key
             if event == curses.ERR:  # -1 no input
                 pass
@@ -89,12 +88,6 @@ def main(term):
                                 entered_words += key
                         else:
                             entered_words += key
-
-                        # pos = len(entered_words)-1
-                        # if pos < 0:
-                        #     pos = 0
-                        # if entered_words[-1] != ' ' and words[pos] != entered_words[-1]:
-                        #     error_count += 1
 
             refresh_ui()
             time.sleep(0.01)
