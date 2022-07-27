@@ -1,3 +1,4 @@
+import math
 import random
 import sys
 import string
@@ -9,6 +10,8 @@ from words_dictionary import generate_words
 def main(term):
     # term.keypad(True)
     term.nodelay(True)
+
+    term_height, term_width = term.getmaxyx()
 
     curses.init_pair(1, 15, 16)  # background color
     curses.init_pair(2, 9, 16)  # error color
@@ -36,7 +39,8 @@ def main(term):
         else:
             curses.curs_set(1)
 
-            term.addstr(5, 0, f'{"%0.1f" % (60 - (time.time() - start_time))}')
+            # Will crash if terminal window gets resized to small
+            term.addstr(math.ceil(len(words) / term_width), 0, f'{"%0.1f" % (60 - (time.time() - start_time))}')
             term.move(0, 0)
 
             term.addstr(words)
@@ -74,6 +78,8 @@ def main(term):
         return error_count
 
     while True:
+        term_height, term_width = term.getmaxyx()
+
         if is_game_going and time.time() - start_time >= 60:
             speed = calculate_speed()
             reset_game()
