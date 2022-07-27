@@ -54,7 +54,7 @@ def main(term):
         words = generate_words()
 
     def calculate_speed():
-        return ((len(entered_words) / 5) / 1) - (count_errors() / 1)  # net wpm
+        return int(((len(entered_words) / 5) / 1) - (count_errors() / 1))  # net wpm
 
     def count_errors():
         error_count = 0
