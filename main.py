@@ -29,14 +29,10 @@ def main(term):
         term.erase()
 
         if not is_game_going:
-            term.addstr('press \'enter\' to start a game')
+            term.addstr('press \'enter\' to start')
             if speed > 0:
                 term.addstr(5, 0, f'speed: {speed}')
         else:
-            term.addstr(5, 0, '%0.1f' % (time.time() - start_time))
-            term.addstr(6, 0, f'errors: {count_errors()}')
-            term.move(0, 0)
-
             term.addstr(words)
 
             term.move(0, 0)
