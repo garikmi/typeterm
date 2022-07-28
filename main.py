@@ -29,11 +29,13 @@ def main(term):
         term.erase()
 
         if not is_game_going:
+            curses.curs_set(0)
             term.addstr('press \'enter\' to start')
             if speed > 0:
                 term.addstr(5, 0, f'speed: {speed}')
         else:
             term.addstr(words)
+            curses.curs_set(1)
 
             term.move(0, 0)
             for index in range(len(entered_words)):
