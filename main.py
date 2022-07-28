@@ -10,6 +10,12 @@ def main(term):
     # term.keypad(True)
     term.nodelay(True)
 
+    curses.init_pair(1, 15, 16)  # background color
+    curses.init_pair(2, 9, 16)  # error color
+    curses.init_pair(3, 12, 16)  # typing color
+
+    term.bkgd(' ', curses.color_pair(1))
+
     words = generate_words()
     entered_words = ''
 
@@ -17,12 +23,6 @@ def main(term):
     start_time = time.time()
 
     speed = 0
-
-    curses.init_pair(1, 15, 16)  # background color
-    curses.init_pair(2, 9, 16)  # error color
-    curses.init_pair(3, 12, 16)  # typing color
-
-    term.bkgd(' ', curses.color_pair(1))
 
     def refresh_ui():
         # term.clear()
@@ -34,9 +34,13 @@ def main(term):
             if speed > 0:
                 term.addstr(5, 0, f'speed: {speed}')
         else:
-            term.addstr(words)
             curses.curs_set(1)
 
+            term.addstr(5, 0, f'time: {"%0.1f" % (time.time() - start_time)}')
+            # term.addstr(5, 0, f'time: {int(time.time() - start_time)}')
+            term.move(0, 0)
+
+            term.addstr(words)
             term.move(0, 0)
             for index in range(len(entered_words)):
                 if entered_words[index] != words[index]:
@@ -50,10 +54,12 @@ def main(term):
         nonlocal words
         nonlocal is_game_going
         nonlocal entered_words
+        nonlocal start_time
 
-        is_game_going = False
+        is_game_going = not is_game_going
         entered_words = ''
         words = generate_words()
+        start_time = time.time()
 
     def calculate_speed():
         return int(((len(entered_words) / 5) / 1) - (count_errors() / 1))  # net wpm
@@ -80,8 +86,7 @@ def main(term):
             elif event == 127:  # backspace
                 entered_words = entered_words[:-1]
             elif event == 10:  # enter
-                is_game_going = not is_game_going
-                start_time = time.time()
+                reset_game()
             else:
                 if is_game_going and len(entered_words) < len(words):
                     key = curses.keyname(event).decode('utf-8')
