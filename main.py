@@ -85,7 +85,7 @@ def main(term):
                 pass
             elif event == ord('X'):  # terminate app
                 break
-            elif event == 127:  # backspace
+            elif event == 127 or event == 8:  # backspace
                 entered_words = entered_words[:-1]
             elif event == 10:  # enter
                 reset_game()
