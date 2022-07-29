@@ -32,12 +32,11 @@ def main(term):
             curses.curs_set(0)
             term.addstr('press \'enter\' to start')
             if speed > 0:
-                term.addstr(5, 0, f'speed: {speed}')
+                term.addstr(5, 0, f'wpm: {speed}')
         else:
             curses.curs_set(1)
 
-            term.addstr(5, 0, f'time: {"%0.1f" % (time.time() - start_time)}')
-            # term.addstr(5, 0, f'time: {int(time.time() - start_time)}')
+            term.addstr(5, 0, f'{"%0.1f" % (60 - (time.time() - start_time))}')
             term.move(0, 0)
 
             term.addstr(words)
