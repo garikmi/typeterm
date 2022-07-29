@@ -43,7 +43,10 @@ def main(term):
             term.move(0, 0)
             for index in range(len(entered_words)):
                 if entered_words[index] != words[index]:
-                    term.addstr(words[index], curses.color_pair(2) | curses.A_BOLD)
+                    if words[index] == ' ':
+                        term.addstr(words[index], curses.color_pair(2) | curses.A_BOLD | curses.A_UNDERLINE)
+                    else:
+                        term.addstr(words[index], curses.color_pair(2) | curses.A_BOLD)
                 else:
                     term.addstr(words[index], curses.color_pair(3) | curses.A_BOLD)
 
